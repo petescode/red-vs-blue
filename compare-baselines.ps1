@@ -1,4 +1,7 @@
 # developed in PowerShell 5.1
+
+# test failed when comparing users-and-groups text file; fix selection logic
+
 Clear-Host
 [int]$count=0
 
