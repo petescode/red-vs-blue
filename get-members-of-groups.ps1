@@ -34,7 +34,18 @@ Get-ADGroup -Filter * -Server $dc -Credential $cred -Properties Members | ForEac
         -Value $(Get-ADGroupMember -Server $dc -Credential $cred -Identity $_.Name | Select -Expand Name)
     [array]$array += $object
 }
-#$array | Select Name,Members | Select -Expand Members Out-Host
-$array | Format-List | Tee-Object -FilePath "$subdir\$report_name" 
+#$array | Format-List | Tee-Object "$subdir\$report_name"
+
+Start-Transcript -Path "$subdir\$report_name"
+$array | ForEach{
+    
+    Write-Host "`nName: " $_.Name
+    Write-Host "Members: " 
+    # if a group has no members, $object.Members becomes type string
+    if($_.Members -Is [System.Object]){ $_ | Select -Expand Members }
+    
+}
+Stop-Transcript
+
 
 # report on the count at some point
