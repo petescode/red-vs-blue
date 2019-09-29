@@ -1,22 +1,21 @@
 # developed in PowerShell 5.1
 
-# test failed when comparing users-and-groups text file; fix selection logic
-
 Clear-Host
 [int]$count=0
-
+$list=@()
 Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Recurse -File | Select -Expand Name | ForEach{
 
     $count++
     $object = New-Object System.Object
     $object | Add-Member -Type NoteProperty -Name 'Num' -Value $count
     $object | Add-Member -Type NoteProperty -Name 'Name' -Value $_
-    [array]$list += $object
+    $list += $object
 }
 
 Write-Host "Select 1st file for comparison"
 
 $list | Out-Host
+[int]$select=0
 Do{
     Try{ $select = Read-Host "Select 1st file" }
     Catch {} # do nothing, including with error messages
@@ -32,6 +31,7 @@ Write-Host "File 1 is: " -NoNewline; Write-Host $file1_name -ForegroundColor Cya
 Write-Host "`nSelect 2nd file for comparison"
 
 $list | Out-Host
+[int]$select=0
 Do{
     Try{ $select = Read-Host "Select 2nd file" }
     Catch {} # do nothing, including with error messages
@@ -44,3 +44,5 @@ $file2 = Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Recurse -File `
 $results = Compare-Object -ReferenceObject $(Get-Content $file1) -DifferenceObject $(Get-Content $file2)
 
 if($NULL -eq $results){ Write-Host "`nThere are no results because nothing is different!" }
+
+$results | Out-Host
