@@ -20,18 +20,18 @@ else{ $directory = "$env:USERPROFILE\Desktop\$((Get-Date).ToString('yyyy-MM-dd')
 
 # sub-directory for computers
 $path_test = Test-Path "$directory\ad_computer_baselines"
-if($path_test -ne $TRUE){ $subdir_comps = New-Item -ItemType Directory -Path "$directory\ad_computer_baselines" }
-else{ $subdir_comps = "$directory\ad_computer_baselines" }
+if($path_test -ne $TRUE){ $computers_subdir = New-Item -ItemType Directory -Path "$directory\ad_computer_baselines" }
+else{ $computers_subdir = "$directory\ad_computer_baselines" }
 
 # sub-directory for users
 $path_test = Test-Path "$directory\ad_user_baselines"
-if($path_test -ne $TRUE){ $subdir_users = New-Item -ItemType Directory -Path "$directory\ad_user_baselines" }
-else{ $subdir_users = "$directory\ad_user_baselines" }
+if($path_test -ne $TRUE){ $users_subdir = New-Item -ItemType Directory -Path "$directory\ad_user_baselines" }
+else{ $users_subdir = "$directory\ad_user_baselines" }
 
 # sub-directory for groups
 $path_test = Test-Path "$directory\ad_group_baselines"
-if($path_test -ne $TRUE){ $subdir_groups = New-Item -ItemType Directory -Path "$directory\ad_group_baselines" }
-else{ $subdir_groups = "$directory\ad_group_baselines" }
+if($path_test -ne $TRUE){ $groups_subdir = New-Item -ItemType Directory -Path "$directory\ad_group_baselines" }
+else{ $groups_subdir = "$directory\ad_group_baselines" }
 ########################################################################################
 
 [ipaddress]$dc = Read-Host "Enter domain controller IP"
@@ -43,18 +43,18 @@ $cred = New-Object System.Management.Automation.PSCredential($user,$password)
     -Properties Name,samAccountName,Enabled,Created,Modified,lastLogonDate,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
     | Select Name,samAccountName,Enabled,Created,Modified,lastLogonDate,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
     | Sort Name
-$computers | Out-File -FilePath "$subdir_comps\$computers_file"
+$computers | Out-File -FilePath "$computers_subdir\$computers_file"
 
 [array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,Enabled,Created,Modified,lastLogonDate,PasswordLastSet `
     | Select Name,samAccountName,Enabled,Created,Modified,lastLogonDate,PasswordLastSet `
     | Sort samAccountName
-$users | Out-File -FilePath "$subdir_users\$users_file"
+$users | Out-File -FilePath "$users_subdir\$users_file"
 
 [array]$groups = Get-ADGroup -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,objectClass,Created,Modified,Description,Members `
     | Select Name,samAccountName,objectClass,Created,Modified,Description,Members `
     | Sort Name
-$groups | Out-File -FilePath "$subdir_groups\$groups_file"
+$groups | Out-File -FilePath "$groups_subdir\$groups_file"
 
 Explorer $directory
