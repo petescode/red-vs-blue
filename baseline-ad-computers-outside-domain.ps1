@@ -26,3 +26,4 @@ else{ $subdir = "$directory\ad_computer_baselines" }
     | Sort Name
 
 $report | Tee-Object -FilePath "$subdir\$report_name"
+#test
