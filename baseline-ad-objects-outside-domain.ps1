@@ -44,17 +44,20 @@ $cred = New-Object System.Management.Automation.PSCredential($user,$password)
     | Select Name,samAccountName,Enabled,Created,Modified,lastLogonDate,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
     | Sort Name
 $computers | Out-File -FilePath "$computers_subdir\$computers_file"
+Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computers.Count)"
 
 [array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,Enabled,Created,Modified,lastLogonDate,PasswordLastSet `
     | Select Name,samAccountName,Enabled,Created,Modified,lastLogonDate,PasswordLastSet `
     | Sort samAccountName
 $users | Out-File -FilePath "$users_subdir\$users_file"
+Add-Content -Path "$users_subdir\$users_file" -Value "Total: $($users.Count)"
 
 [array]$groups = Get-ADGroup -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,objectClass,Created,Modified,Description,Members `
     | Select Name,samAccountName,objectClass,Created,Modified,Description,Members `
     | Sort Name
 $groups | Out-File -FilePath "$groups_subdir\$groups_file"
+Add-Content -Path "$groups_subdir\$groups_file" -Value "Total: $($groups.Count)"
 
 Explorer $directory
