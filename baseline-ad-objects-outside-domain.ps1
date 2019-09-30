@@ -3,9 +3,6 @@ Author: Pete Wood
 
 - Developed in PowerShell 5.1
 
-Dev:
-- check that all objects are sorted properly before being output to ensure consistency
-- update credential method
 #>
 ########################################################################################
 # Housekeeping
@@ -61,3 +58,5 @@ $users | Out-File -FilePath "$subdir_users\$users_file"
     | Select Name,samAccountName,objectClass,Created,Modified,Description,Members `
     | Sort Name
 $groups | Out-File -FilePath "$subdir_groups\$groups_file"
+
+Explorer $directory
