@@ -40,15 +40,15 @@ $password = Read-Host "Enter domain username password" -AsSecureString
 $cred = New-Object System.Management.Automation.PSCredential($user,$password)
 
 [array]$computers = Get-ADComputer -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,lastLogonDate,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
-    | Select Name,samAccountName,Enabled,Created,Modified,lastLogonDate,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
+    -Properties Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
+    | Select Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
     | Sort Name
 $computers | Out-File -FilePath "$computers_subdir\$computers_file"
 Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computers.Count)"
 
 [array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,lastLogonDate,PasswordLastSet `
-    | Select Name,samAccountName,Enabled,Created,Modified,lastLogonDate,PasswordLastSet `
+    -Properties Name,samAccountName,Enabled,Created,Modified,PasswordLastSet `
+    | Select Name,samAccountName,Enabled,Created,Modified,PasswordLastSet `
     | Sort samAccountName
 $users | Out-File -FilePath "$users_subdir\$users_file"
 Add-Content -Path "$users_subdir\$users_file" -Value "Total: $($users.Count)"
