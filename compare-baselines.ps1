@@ -1,3 +1,4 @@
+# Author: Pete Wood
 # developed in PowerShell 5.1
 
 Clear-Host

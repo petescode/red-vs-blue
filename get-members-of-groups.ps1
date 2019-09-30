@@ -1,11 +1,11 @@
 # Author: Pete Wood
 # developed in PowerShell 5.1
+
 Import-Module ActiveDirectory
 Clear-Host
 [int]$count=0
 [string]$datestamp = (Get-Date).ToString('yyyy-MM-dd')
 [string]$timestamp = (Get-Date).ToString('HHmm')
-[string]$report_name = "ad_groups_with_members_$datestamp@$($timestamp).txt"
 
 # directory to store reports in; if not exist, create
 $path_test = Test-Path "$env:USERPROFILE\Desktop\$((Get-Date).ToString('yyyy-MM-dd'))_powershell_queries"
@@ -17,6 +17,7 @@ $path_test = Test-Path "$directory\ad_group_baselines"
 if($path_test -ne $TRUE){ $subdir = New-Item -ItemType Directory -Path "$directory\ad_group_baselines" }
 else{ $subdir = "$directory\ad_group_baselines" }
 
+[string]$report_file = "$subdir\ad_groups_with_members_$datestamp@$($timestamp).txt"
 
 [ipaddress]$dc = Read-Host "Enter domain controller IP"
 [string]$user = Read-Host "Enter domain username"
@@ -38,14 +39,14 @@ Get-ADGroup -Filter * -Server $dc -Credential $cred -Properties Members | ForEac
 
 $list | ForEach-Object{
 
-    Add-Content -Path "$subdir\$report_name" -Value "GROUP NAME: $($_.Name)"
-    Add-Content -Path "$subdir\$report_name" -Value "MEMBERS:"
+    Add-Content -Path $report_file -Value "GROUP NAME: $($_.Name)"
+    Add-Content -Path $report_file -Value "MEMBERS:"
 
     if($_.Members -Is [System.Object]){ # if a group has no members, $object.Members becomes type string (causes errors)
-        Add-Content -Path "$subdir\$report_name" -Value $($_ | Select -Expand Members)
+        Add-Content -Path $report_file -Value $($_ | Select -Expand Members)
     }
-    Add-Content -Path "$subdir\$report_name" -Value " "
+    Add-Content -Path $report_file -Value " "
 }
-#Invoke-Item "$subdir\$report_name"
+Invoke-Item $report_file
 
 # report on the count at some point

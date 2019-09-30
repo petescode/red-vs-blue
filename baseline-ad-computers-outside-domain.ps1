@@ -1,8 +1,8 @@
+# Author: Pete Wood
 # developed in PowerShell 5.1
-# lastLogonDate for AD Computer objects is last time it authenticated to the DC
 
-Clear-Host
 Import-Module ActiveDirectory
+Clear-Host
 [string]$datestamp = (Get-Date).ToString('yyyy-MM-dd')
 [string]$timestamp = (Get-Date).ToString('HHmm')
 [string]$report_name = "ad_computers_baseline_$datestamp@$($timestamp).txt"

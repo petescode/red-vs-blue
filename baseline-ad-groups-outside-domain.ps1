@@ -1,6 +1,8 @@
+# Author: Pete Wood
 # developed in PowerShell 5.1
-Clear-Host
+
 Import-Module ActiveDirectory
+Clear-Host
 [string]$datestamp = (Get-Date).ToString('yyyy-MM-dd')
 [string]$timestamp = (Get-Date).ToString('HHmm')
 [string]$report_name = "ad_groups_baseline_$datestamp@$($timestamp).txt"
