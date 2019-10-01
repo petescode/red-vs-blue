@@ -39,6 +39,7 @@ else{ $groups_subdir = "$directory\ad_group_baselines" }
 $password = Read-Host "Enter domain username password" -AsSecureString
 $cred = New-Object System.Management.Automation.PSCredential($user,$password)
 
+Write-Host "`nCollecting AD Computer objects..."
 [array]$computers = Get-ADComputer -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
     | Select Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
@@ -46,6 +47,7 @@ $cred = New-Object System.Management.Automation.PSCredential($user,$password)
 $computers | Out-File -FilePath "$computers_subdir\$computers_file"
 Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computers.Count)"
 
+Write-Host "`nCollecting AD User objects..."
 [array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,Enabled,Created,Modified,PasswordLastSet `
     | Select Name,samAccountName,Enabled,Created,Modified,PasswordLastSet `
@@ -53,9 +55,10 @@ Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computer
 $users | Out-File -FilePath "$users_subdir\$users_file"
 Add-Content -Path "$users_subdir\$users_file" -Value "Total: $($users.Count)"
 
+Write-Host "`nCollecting AD Group objects...`n"
 [array]$groups = Get-ADGroup -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,objectClass,Created,Modified,Description,Members `
-    | Select Name,samAccountName,objectClass,Created,Modified,Description,Members `
+    -Properties Name,samAccountName,objectClass,Created,Modified,Description `
+    | Select Name,samAccountName,objectClass,Created,Modified,Description `
     | Sort Name
 $groups | Out-File -FilePath "$groups_subdir\$groups_file"
 Add-Content -Path "$groups_subdir\$groups_file" -Value "Total: $($groups.Count)"
