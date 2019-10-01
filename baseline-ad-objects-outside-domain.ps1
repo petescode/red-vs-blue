@@ -49,13 +49,13 @@ Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computer
 
 Write-Host "`nCollecting AD User objects..."
 [array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,PasswordLastSet `
-    | Select Name,samAccountName,Enabled,Created,Modified,PasswordLastSet `
+    -Properties Name,samAccountName,Enabled,Created,Modified,PasswordExpired,PasswordNeverExpires,PasswordLastSet,PasswordNotRequired `
+    | Select Name,samAccountName,Enabled,Created,Modified,PasswordExpired,PasswordNeverExpires,PasswordLastSet,PasswordNotRequired `
     | Sort samAccountName
 $users | Out-File -FilePath "$users_subdir\$users_file"
 Add-Content -Path "$users_subdir\$users_file" -Value "Total: $($users.Count)"
 
-Write-Host "`nCollecting AD Group objects...`n"
+Write-Host "`nCollecting AD Group objects..."
 [array]$groups = Get-ADGroup -Filter * -Server $dc -Credential $cred `
     -Properties Name,samAccountName,objectClass,Created,Modified,Description `
     | Select Name,samAccountName,objectClass,Created,Modified,Description `
