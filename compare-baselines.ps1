@@ -1,10 +1,12 @@
-# Author: Pete Wood
-# developed in PowerShell 5.1
+<#
+Author: Pete Wood
+- Developed in PowerShell 5.1
+#>
 
 Clear-Host
 [int]$count=0
 $list=@()
-Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Recurse -File | Select -Expand Name | ForEach{
+Get-ChildItem -Path "$env:USERPROFILE\Desktop" -Recurse -File | Sort Name | Select -Expand Name | ForEach{
 
     $count++
     $object = New-Object System.Object

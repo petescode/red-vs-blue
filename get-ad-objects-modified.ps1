@@ -9,10 +9,9 @@ Import-Module ActiveDirectory
 Clear-Host
 [string]$datestamp = (Get-Date).ToString('yyyy-MM-dd')
 [string]$timestamp = (Get-Date).ToString('HHmm')
-[string]$computers_file = "ad_computers_baseline_$datestamp@$($timestamp).txt"
-[string]$users_file = "ad_users_baseline_$datestamp@$($timestamp).txt"
-[string]$groups_file = "ad_groups_baseline_$datestamp@$($timestamp).txt"
-[string]$pw_policy_file = "ad_domain_password_policy_$datestamp@$($timestamp)"
+[string]$computers_file = "ad_computers_modified_$datestamp@$($timestamp).txt"
+[string]$users_file = "ad_users_modified_$datestamp@$($timestamp).txt"
+[string]$groups_file = "ad_groups_modified_$datestamp@$($timestamp).txt"
 
 # directory to store reports in; if not exist, create
 $path_test = Test-Path "$env:USERPROFILE\Desktop\$((Get-Date).ToString('yyyy-MM-dd'))_powershell_queries"
@@ -40,28 +39,22 @@ else{ $groups_subdir = "$directory\ad_group_baselines" }
 $password = Read-Host "Enter domain username password" -AsSecureString
 $cred = New-Object System.Management.Automation.PSCredential($user,$password)
 
-Write-Host "`nCollecting AD Computer objects..."
-[array]$computers = Get-ADComputer -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
-    | Select Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
-    | Sort Name
-$computers | Out-File -FilePath "$computers_subdir\$computers_file"
-Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computers.Count)"
+# Get AD Computers
+Write-Host "`nGetting AD Computers..."
+Get-ADComputer -Server $dc -Credential $cred -Filter * -Properties Created,Modified `
+    | Select-Object Name,Enabled,Created,Modified | Sort-Object Modified `
+    | Out-File "$computers_subdir\$computers_file"
 
-Write-Host "`nCollecting AD User objects..."
-[array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,PasswordExpired,PasswordNeverExpires,PasswordLastSet,PasswordNotRequired `
-    | Select Name,samAccountName,Enabled,Created,Modified,PasswordExpired,PasswordNeverExpires,PasswordLastSet,PasswordNotRequired `
-    | Sort samAccountName
-$users | Out-File -FilePath "$users_subdir\$users_file"
-Add-Content -Path "$users_subdir\$users_file" -Value "Total: $($users.Count)"
+# Get AD Users
+Write-Host "`nGetting AD Users..."
+Get-ADUser -Server $dc -Credential $cred -Filter * -Properties Created,Modified `
+    | Select-Object Name,Enabled,Created,Modified | Sort-Object Modified `
+    | Out-File "$users_subdir\$users_file"
 
-Write-Host "`nCollecting AD Group objects..."
-[array]$groups = Get-ADGroup -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,objectClass,Created,Modified,Description `
-    | Select Name,samAccountName,objectClass,Created,Modified,Description `
-    | Sort Name
-$groups | Out-File -FilePath "$groups_subdir\$groups_file"
-Add-Content -Path "$groups_subdir\$groups_file" -Value "Total: $($groups.Count)"
+# Get AD Groups
+Write-Host "`nGetting AD Groups...`n"
+Get-ADGroup -Server $dc -Credential $cred -Filter * -Properties Created,Modified `
+    | Select-Object Name,Enabled,Created,Modified | Sort-Object Modified `
+    | Out-File "$groups_subdir\$groups_file"
 
 Explorer $directory
