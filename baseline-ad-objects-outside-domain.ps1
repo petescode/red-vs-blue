@@ -42,26 +42,40 @@ $cred = New-Object System.Management.Automation.PSCredential($user,$password)
 
 Write-Host "`nCollecting AD Computer objects..."
 [array]$computers = Get-ADComputer -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
-    | Select Name,samAccountName,Enabled,Created,Modified,OperatingSystem,OperatingSystemVersion,PasswordNotRequired `
-    | Sort Name
+    -Properties * | Sort-Object Name
+
 $computers | Out-File -FilePath "$computers_subdir\$computers_file"
 Add-Content -Path "$computers_subdir\$computers_file" -Value "Total: $($computers.Count)"
 
 Write-Host "`nCollecting AD User objects..."
 [array]$users = Get-ADUser -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,Enabled,Created,Modified,PasswordExpired,PasswordNeverExpires,PasswordLastSet,PasswordNotRequired `
-    | Select Name,samAccountName,Enabled,Created,Modified,PasswordExpired,PasswordNeverExpires,PasswordLastSet,PasswordNotRequired `
-    | Sort samAccountName
+    -Properties * | Sort-Object samAccountName
+
 $users | Out-File -FilePath "$users_subdir\$users_file"
 Add-Content -Path "$users_subdir\$users_file" -Value "Total: $($users.Count)"
 
 Write-Host "`nCollecting AD Group objects..."
 [array]$groups = Get-ADGroup -Filter * -Server $dc -Credential $cred `
-    -Properties Name,samAccountName,objectClass,Created,Modified,Description `
-    | Select Name,samAccountName,objectClass,Created,Modified,Description `
-    | Sort Name
+    -Properties * | Sort-Object Name
+
 $groups | Out-File -FilePath "$groups_subdir\$groups_file"
 Add-Content -Path "$groups_subdir\$groups_file" -Value "Total: $($groups.Count)"
+
+Write-Host "`nCollecting domain password policy..."
+Get-ADDefaultDomainPasswordPolicy -Server $dc -Credential $cred | Out-File "$directory\$pw_policy_file"
+
+# get OUs
+
+# get DNS info
+# have to do "winrm set winrm/config/client '@{TrustedHosts="$dc1,$dc2"}'" before these will work:
+# Invoke-Command -ComputerName $dc1 -Credential $cred -ScriptBlock { Get-DNSServerZone | ForEach { $_ | Get-dnsserverresourcerecord } } `
+#    | Out-File "filepath" 
+
+# get DC info
+
+# get GPO info
+# $session = get-pssession -computername $dc -credential $cred
+# copy-item -FromSession $session -Path "C:\users\on\the\remote\machine" -Destination "$env:USERPROFILE\Desktop\"
+# remove-item -FromSession $session -Path "C:\path\to\file\on\remote\machine"
 
 Explorer $directory
