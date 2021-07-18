@@ -1,17 +1,14 @@
 ---
-tasks:
+- hosts: localhost
+  become: yes
+
+  tasks:
   - name: update Kali packages
-    hosts: localhost
-    connection: local
-    become: yes
     apt:
       name: "*"
       state: latest
 
   - name: install list of packages
-    hosts: localhost
-    connection: local
-    become: yes
     apt:
       pkg:
         - powershell
