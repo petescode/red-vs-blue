@@ -14,4 +14,9 @@
         - powershell
         - terminator
         - keepassxc
+
+  - name: copy inventory file to /etc/ansible/hosts
+    copy:
+      src: ./hosts
+      dest: /etc/ansible/hosts
 ...
