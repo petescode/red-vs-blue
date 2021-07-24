@@ -1,0 +1,9 @@
+# /etc/ansible/hosts
+
+[enclave_1]
+
+
+[enclave_2]
+
+
+[enclave_3]

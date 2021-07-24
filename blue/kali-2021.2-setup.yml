@@ -1,0 +1,22 @@
+---
+- hosts: localhost
+  become: yes
+
+  tasks:
+  - name: update Kali packages
+    apt:
+      name: "*"
+      state: latest
+
+  - name: install list of packages
+    apt:
+      pkg:
+        - powershell
+        - terminator
+        - keepassxc
+
+  - name: copy inventory file to /etc/ansible/hosts
+    copy:
+      src: ./hosts
+      dest: /etc/ansible/hosts
+...
