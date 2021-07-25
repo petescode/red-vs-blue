@@ -98,13 +98,7 @@ ForEach($c in $computers){
         LogonType   = " 02 - Local interactive"
         Workstation = $t.Workstation
       }
-      $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 02 - Local interactive"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
+      $array += $object 
     }
     if($t.LogonType -eq "3"){
       $object = [PSCustomObject]@{
@@ -114,12 +108,6 @@ ForEach($c in $computers){
         Workstation = $t.Workstation
       }
       $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 03 - Network"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object  
     }
     if($t.LogonType -eq "4"){
       $object = [PSCustomObject]@{
@@ -128,13 +116,7 @@ ForEach($c in $computers){
         LogonType   = " 04 - Batch"
         Workstation = $t.Workstation
       }
-      $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 04 - Batch"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
+      $array += $object 
     }
     if($t.LogonType -eq "5"){
       $object = [PSCustomObject]@{
@@ -143,13 +125,7 @@ ForEach($c in $computers){
         LogonType   = " 05 - Service"
         Workstation = $t.Workstation
       }
-      $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 05 - Service"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
+      $array += $object  
     }
     if($t.LogonType -eq "7"){
       $object = [PSCustomObject]@{
@@ -159,12 +135,6 @@ ForEach($c in $computers){
         Workstation = $t.Workstation
       }
       $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 07 - Screen unlock"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
     }
     if($t.LogonType -eq "8"){
       $object = [PSCustomObject]@{
@@ -174,12 +144,6 @@ ForEach($c in $computers){
         Workstation = $t.Workstation
       }
       $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 08 - Network cleartext"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
     }
     if($t.LogonType -eq "9"){
       $object = [PSCustomObject]@{
@@ -189,12 +153,6 @@ ForEach($c in $computers){
         Workstation = $t.Workstation
       }
       $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 09 - New credentials"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
     }
     if($t.LogonType -eq "10"){
       $object = [PSCustomObject]@{
@@ -203,13 +161,7 @@ ForEach($c in $computers){
         LogonType   = " 10 - Remote interactive (RDP)"
         Workstation = $t.Workstation
       }
-      $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 10 - Remote interactive (RDP)"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
+      $array += $object 
     }
     if($t.LogonType -eq "11"){
       $object = [PSCustomObject]@{
@@ -219,12 +171,6 @@ ForEach($c in $computers){
         Workstation = $t.Workstation
       }
       $array += $object
-      #$object = New-Object System.Object
-      #$object | Add-Member -Type NoteProperty -Name "LogonTime" -Value $t.LogonTime
-      #$object | Add-Member -Type NoteProperty -Name "UserName" -Value $t.UserName
-      #$object | Add-Member -Type NoteProperty -Name "LogonType" -Value " 11 - Cached"
-      #$object | Add-Member -Type NoteProperty -Name "Workstation" -Value $t.Workstation
-      #$array += $object   
     } 
   }
   $array | Sort LogonTime -Descending | Export-CSV "$folder\UserLogonReport_$c.csv" -NoTypeInformation
